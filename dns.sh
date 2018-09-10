@@ -114,11 +114,14 @@ arDdnsInfo() {
     # Get domain ID
     domainID=$(arApiPost "Domain.Info" "domain=${1}")
     domainID=$(echo $domainID | sed 's/.*{"id":"\([0-9]*\)".*/\1/')
+
     
     # Get Record ID
     recordID=$(arApiPost "Record.List" "domain_id=${domainID}&sub_domain=${2}")
+
     recordID=$(echo $recordID | sed 's/.*\[{"id":"\([0-9]*\)".*/\1/')
-    
+
+
     # Last IP
     recordIP=$(arApiPost "Record.Info" "domain_id=${domainID}&record_id=${recordID}")
     recordIP=$(echo $recordIP | sed 's/.*,"value":"\([0-9\.]*\)".*/\1/')
@@ -146,6 +149,8 @@ arApiPost() {
     else
         local param="login_token=${arToken}&format=json&${2}"
     fi
+    echo $param 
+    echo $inter
     wget --quiet --no-check-certificate --output-document=- --user-agent=$agent --post-data $param $inter
 }
 
