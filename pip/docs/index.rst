@@ -1,19 +1,18 @@
 pip
 ===
 
-`User list <http://groups.google.com/group/python-virtualenv>`_ |
-`Dev list <http://groups.google.com/group/pypa-dev>`_ |
-`Github <https://github.com/pypa/pip>`_ |
-`PyPI <https://pypi.python.org/pypi/pip/>`_ |
+`User list <https://groups.google.com/forum/#!forum/python-virtualenv>`_ |
+`Dev list <https://groups.google.com/forum/#!forum/pypa-dev>`_ |
+`GitHub <https://github.com/pypa/pip>`_ |
+`PyPI <https://pypi.org/project/pip/>`_ |
 User IRC: #pypa |
 Dev IRC: #pypa-dev
 
-The `PyPA recommended
-<https://python-packaging-user-guide.readthedocs.org/en/latest/current.html>`_
-tool for installing and managing Python packages.
+The `PyPA recommended <https://packaging.python.org/en/latest/current/>`_ tool
+for installing Python packages.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    quickstart
    installing
@@ -21,5 +20,3 @@ tool for installing and managing Python packages.
    reference/index
    development
    news
-
-

@@ -2,14 +2,14 @@
 
 import optparse
 import sys
+from textwrap import dedent
+
 from docutils import nodes
 from docutils.parsers import rst
 from docutils.statemachine import ViewList
-from textwrap import dedent
-from pip import commands
-from pip import cmdoptions
-from pip.locations import default_log_file
-from pip.util import get_prog
+
+from pip._internal import cmdoptions
+from pip._internal.commands import commands_dict as commands
 
 
 class PipCommandUsage(rst.Directive):
@@ -17,8 +17,7 @@ class PipCommandUsage(rst.Directive):
 
     def run(self):
         cmd = commands[self.arguments[0]]
-        prog = '%s %s' % (get_prog(), cmd.name)
-        usage = dedent(cmd.usage.replace('%prog', prog))
+        usage = dedent(cmd.usage.replace('%prog', 'pip')).strip()
         node = nodes.literal_block(usage, usage)
         return [node]
 
@@ -54,11 +53,10 @@ class PipOptions(rst.Directive):
         if option.takes_value():
             metavar = option.metavar or option.dest.lower()
             line += " <%s>" % metavar.lower()
-        #fix defaults
+        # fix defaults
         opt_help = option.help.replace('%default', str(option.default))
-        #fix paths with sys.prefix
+        # fix paths with sys.prefix
         opt_help = opt_help.replace(sys.prefix, "<sys.prefix>")
-        opt_help = opt_help.replace(default_log_file, "<see :ref:`FileLogging`>")
         return [bookmark_line, "", line, "", "    %s" % opt_help, ""]
 
     def _format_options(self, options, cmd_name=None):
@@ -79,12 +77,16 @@ class PipOptions(rst.Directive):
 
 class PipGeneralOptions(PipOptions):
     def process_options(self):
-        self._format_options([o.make() for o in cmdoptions.general_group['options']])
+        self._format_options(
+            [o() for o in cmdoptions.general_group['options']]
+        )
 
 
 class PipIndexOptions(PipOptions):
     def process_options(self):
-        self._format_options([o.make() for o in cmdoptions.index_group['options']])
+        self._format_options(
+            [o() for o in cmdoptions.index_group['options']]
+        )
 
 
 class PipCommandOptions(PipOptions):
@@ -92,7 +94,10 @@ class PipCommandOptions(PipOptions):
 
     def process_options(self):
         cmd = commands[self.arguments[0]]()
-        self._format_options(cmd.parser.option_groups[0].option_list, cmd_name=cmd.name)
+        self._format_options(
+            cmd.parser.option_groups[0].option_list,
+            cmd_name=cmd.name,
+        )
 
 
 def setup(app):
