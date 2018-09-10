@@ -1,4 +1,7 @@
 apt-get update && 
-apt-get install python-pip python-m2crypto -y &&
+python /pip/setup.py install &&
+python /setuptools/setup.py install &&
 pip install shadowsocks &&
 ssserver -c ss.json -d start
+
+
